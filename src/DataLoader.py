@@ -55,26 +55,18 @@ class Dataset(Dataset):
 
 
 
-def dataloader (self, data_dir,csv_file):
+def dataloader_training (self, data_dir,csv_file):
     train_dataset = Dataset(csv_file=csv_file
                                 , data_dir=data_dir)
     dataloader = DataLoader(train_dataset, batch_size=64, shuffle=True)
-
-        # train_data = datasets.ImageFolder(data_dir + '/train', transform=train_transforms)
-        # test_data = datasets.ImageFolder(data_dir + '/test', transform=test_transforms)
-
-        # testloader = torch.utils.data.DataLoader(test_data, batch_size=64)
-        # Create the dataset objects
-
-
-        # Create the dataloader objects
-
-
-        # looping through epochs then looping through batches then looping through dataset single batch then do whatever you want
-    epochs = input("pls put no of epoches")
     iterator = iter(dataloader)
     return iterator
-    # for i in range(epochs):
-    #     for j in range(64):
-    #         images, labels = next(iterator)
-    #             #forward propagation
+
+
+def dataloader_testing (self, data_dir,csv_file):
+    test_dataset = Dataset(csv_file=csv_file
+                                , data_dir=data_dir)
+    dataloader = DataLoader(test_dataset, batch_size=64, shuffle=True)
+
+    iterator = iter(dataloader)
+    return iterator
