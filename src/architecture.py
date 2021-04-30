@@ -9,8 +9,9 @@ class Net(nn.Module):
         self.fc1 =  nn.Linear(1024, 512)
         self.fc2 = nn.Linear(512, 256)
         self.fc3 = nn.Linear(256, 2)
+        criterion = nn.NLLLoss()
 
-    def forward(self, x):
+    def forward(self, x,labels):
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
         x = F.LogSoftmax(self.fc3(x),dim=1)

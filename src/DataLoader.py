@@ -58,15 +58,20 @@ class Dataset(Dataset):
 def dataloader_training (self, data_dir,csv_file):
     train_dataset = Dataset(csv_file=csv_file
                                 , data_dir=data_dir)
-    dataloader = DataLoader(train_dataset, batch_size=64, shuffle=True)
+
+    sampler=torch.utils.data.RandomSampler(train_dataset)
+    sampler=torch.utils.data.sampler.BatchSampler(sampler=sampler, batch_size=64)
+    dataloader = DataLoader(train_dataset, batch_size=64, shuffle=True,batch_sampler=sampler)
     iterator = iter(dataloader)
-    return iterator
+    return iterator,train_dataset.len
 
 
 def dataloader_testing (self, data_dir,csv_file):
     test_dataset = Dataset(csv_file=csv_file
                                 , data_dir=data_dir)
+    sampler=torch.utils.data.RandomSampler(test_dataset)
+
     dataloader = DataLoader(test_dataset, batch_size=64, shuffle=True)
 
     iterator = iter(dataloader)
-    return iterator
+    return iterator,test_dataset.len
