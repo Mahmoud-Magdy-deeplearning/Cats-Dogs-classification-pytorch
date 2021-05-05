@@ -7,11 +7,15 @@ import os
 import sys
 import os.path
 from torch.utils.data import Dataset, DataLoader
+from os import listdir
+from os.path import isfile, join
+from PIL import Image
+
 
 class Dataset(Dataset):
 
     # Constructor
-    def __init__(self, csv_file, data_dir, transform=None):
+    def __init__(self,data_dir):
         # Image directory
         self.data_dir = data_dir
 
@@ -24,54 +28,49 @@ class Dataset(Dataset):
                                                transforms.Normalize([0.485, 0.456, 0.406],
                                                                     [0.229, 0.224, 0.225])])
 
-        # Load the CSV file contians image info
-        self.data_name = pd.read_csv(csv_file)
+        # files in the directory
+        self.files = [f for f in listdir(data_dir) if isfile(join(data_dir, f))]
 
-        # Number of images in dataset
-        self.len = self.data_name.shape[0]
-
-        # Get the length
 
     def __len__(self):
-        return self.len
+
+        return len(self.files)
 
     # Getter
     def __getitem__(self, idx):
-        # Image file path
-        img_name = self.data_dir + self.data_name.iloc[idx, 2]
+        # The class label for the image
+
+        label = 0 if self.files[idx].split(".")[0] == "dog" else 1
+
+        img_name = join(self.data_dir , self.files[idx])
 
         # Open image file
         image = Image.open(img_name)
 
-        # The class label for the image
-        y = self.data_name.iloc[idx, 3]
 
         # If there is any transform method, apply it onto the image
         if self.transform:
             image = self.transform(image)
 
-        return image, y
+
+        return image, label
 
 
 
 
-def dataloader_training (self, data_dir,csv_file):
-    train_dataset = Dataset(csv_file=csv_file
-                                , data_dir=data_dir)
+def dataloader_training (data_dir):
+    train_dataset = Dataset(data_dir=data_dir)
 
     sampler=torch.utils.data.RandomSampler(train_dataset)
-    sampler=torch.utils.data.sampler.BatchSampler(sampler=sampler, batch_size=64)
-    dataloader = DataLoader(train_dataset, batch_size=64, shuffle=True,batch_sampler=sampler)
-    iterator = iter(dataloader)
-    return iterator,train_dataset.len
+    sampler=torch.utils.data.sampler.BatchSampler(sampler=sampler, batch_size=64, drop_last=True)
+    dataloader = DataLoader(train_dataset,batch_sampler=sampler)
+    return dataloader
 
 
-def dataloader_testing (self, data_dir,csv_file):
-    test_dataset = Dataset(csv_file=csv_file
-                                , data_dir=data_dir)
+def dataloader_testing (data_dir):
+    test_dataset = Dataset(data_dir=data_dir)
+
     sampler=torch.utils.data.RandomSampler(test_dataset)
-
-    dataloader = DataLoader(test_dataset, batch_size=64, shuffle=True)
-
-    iterator = iter(dataloader)
-    return iterator,test_dataset.len
+    sampler=torch.utils.data.sampler.BatchSampler(sampler=sampler, batch_size=64, drop_last=True)
+    dataloader = DataLoader(test_dataset,batch_sampler=sampler)
+    return dataloader
