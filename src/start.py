@@ -2,6 +2,9 @@ import argparse
 from src.train import train
 from src.test import test
 from src.inference import inference
+
+import sys
+sys.path.insert(1, ".")
 parser = argparse.ArgumentParser()
 parser.add_argument("-train_dir", default=rf"F:\Machine learning projects\pytorch Dogs vs Cats\train", type=str)
 parser.add_argument("-test_dir", default=rf"F:\Machine learning projects\pytorch Dogs vs Cats\test1", type=str)
