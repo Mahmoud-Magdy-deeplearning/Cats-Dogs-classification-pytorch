@@ -4,8 +4,8 @@ from torch import nn
 import torch
 import os
 from torch import optim
-from src.architecture import Net
-from src.DataLoader import dataloader_training
+from architecture import Net
+from DataLoader import dataloader_training
 from torch.utils.tensorboard import SummaryWriter
 
 def train(args):
